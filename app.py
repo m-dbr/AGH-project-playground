@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 from datetime import timedelta, date
 import re, pyodbc
 import fun, config
@@ -197,8 +197,7 @@ def courses():
             'adres_url': result[0]['adres_url'],
             'nazwa_poziomu': result[0]['nazwa_poziomu']
         }
-    print('!!!!!!!!!!!!!!!')
-    print(kursy)
+
     
     if 'id_user' in session:
         user_data = fun.user_data(email=None, id_user=session['id_user']) 
@@ -210,6 +209,16 @@ def courses():
 def buy_course(id_kursu):
     if 'id_user' in session:
         # Pobranie danych kursu
+        tmp0 = fun.execute_query('SELECT COUNT(*) FROM zamowienia_kursy WHERE id_kursu=?', (id_kursu))
+        result0 = {}
+        for i in range(len(tmp0)):
+            result0 [i]=tmp0[i]
+        
+        if result0[0][''] > 0:
+            msg = 'Sprawdź swoje kursy! Już masz ten kurs :)'
+            return render_template('moje-konto.html', msg=msg, user_data=user_data)
+
+        print(result0)
         tmp = fun.execute_query('SELECT * FROM kursy WHERE id_kursu=?', (id_kursu,))
 
         result = {}
@@ -225,17 +234,46 @@ def buy_course(id_kursu):
                 'data_dodania': result[0]['data_dodania'],
                 'czas_trwania': result[0]['czas_trwania'],
                 'adres_url': result[0]['adres_url'],
-                'nazwa_poziomu': result[0]['nazwa_poziomu']
             }
         current_date = date.today().strftime('%Y-%m-%d')
         # Aktualizacja danych zamówienia
-        fun.execute_sql_query('INSERT INTO zamowienia_kursy (id_kursu, id_uzytkownika, data_zlozenia, data_oplacenia, typ_platnosci) VALUES (?, ?, ?, ?, ?, ?)', (kursy['id_kursu'], session['id_user'], current_date, current_date, 'Blik'))
+        # Dodanie odrazu oplacenia jako dzien dzisiejszy - brak implementacji platnosci jeszcze
+        fun.execute_sql_query('INSERT INTO zamowienia_kursy (id_kursu, id_uzytkownika, data_zlozenia, data_oplacenia, typ_platnosci) VALUES (?, ?, ?, ?, ?)', (kursy['id_kursu'], session['id_user'], current_date, current_date, 'Blik'))
         
-        return redirect(url_for('index'))
+        return redirect(url_for('moje_konto'))
     else:
         return redirect(url_for('login'))
 
 
+# Strona wyświetlająca zakupione kursy
+@app.route('/moje-kursy')
+def my_courses():
+        # Pobranie zakupionych kursów z bazy danych
+    tmp = fun.execute_query('SELECT * FROM Vszczegoly_zamowien_kursy')
+
+    result = {}
+    for i in range(len(tmp)):
+        result [i]=tmp[i]
+    
+    if result:
+        moje_kursy = {
+            'id_zamowienia_kurs': result[0]['id_zamowienia_kursy'],
+            'data_zlozenia': result[0]['data_zlozenia'],
+            'data_oplacenia': result[0]['data_oplacenia'],
+            'nazwa': result[0]['nazwa'],
+            'autor': result[0]['autor'],
+            'adres_url': result[0]['adres_url']
+        }
+    return render_template('moje-kursy.html', moje_kursy=moje_kursy)
+
+
+@app.route('/moje-kursy/<int:id_zamowienia>')
+def dodaj_do_ulubionych(id_zamowienia_kursy, id_uzytkownika):
+    # Wprowadzenie rekordu do tabeli ulubione_kursy
+    fun.execute_sql_query('INSERT INTO ulubione_kursy (id_zamowienia_kursy, id_uzytkownika) VALUES (?, ?)', (id_zamowienia_kursy, id_uzytkownika,))
+
+    flash('Dodano do ulubionych')
+    return redirect('/moje-kursy')
 
 if __name__ == '__main__':
     app.run()

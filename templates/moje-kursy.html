@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Moje kursy</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Moje kursy</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <ul>
+        {% for kurs in moje_kursy %}
+            <li>
+                {{ kurs['nazwa'] }}
+                <a href="{{ url_for('moje_kursy', id_zamowienia_kursy=moje_kursy['id_zamowienia_kursy'], id_uzytkownika=moje_kursy['id_uzytkownika']) }}">
+                    <i class="fas fa-heart"></i>
+                    Dodaj do ulubionych
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+</body>
+</html>
