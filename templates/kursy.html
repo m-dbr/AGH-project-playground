@@ -8,20 +8,30 @@
     <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
     <br>
     <h1>Lista kursów</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+                <button onclick="window.location.href='/moje-kursy'">Moje kursy</button>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     {% if 'id_user' in session %}
     <h1>Witaj, {{ user_data.imie }}!</h1>
     {% endif %}
     <ul>
         {% for kurs in kursy %}
         <li>
-            <h3>{{ kursy['nazwa'] }}</h3>
-            <p>{{ kursy['nazwa_poziomu'] }}</p>
-            <p>Cena: {{ kursy['cena'] }}</p>
-            <p>Autor: {{ kursy['autor'] }}</p>
-            <p>Data dodania: {{ kursy['data_dodania'] }}</p>
-            <p>Czas trwania: {{ kursy['czas_trwania'] }}</p>
+            <h3>{{ kurs[1] }}</h3>
+            <p>{{ kurs[7] }}</p>
+            <p>Cena: {{ kurs[3] }}</p>
+            <p>Autor: {{ kurs[2] }}</p>
+            <p>Data dodania: {{ kurs[4] }}</p>
+            <p>Czas trwania: {{ kurs[5] }}</p>
             {% if 'id_user' in session %}
-                <a href="{{ url_for('buy_course', id_kursu=kursy['id_kursu']) }}">Kup kurs</a>
+                <a href="{{ url_for('buy_course', id_kursu=kurs[0]) }}">Kup kurs</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Zaloguj się, aby kupić kurs</a>
             {% endif %}

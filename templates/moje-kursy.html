@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Moje kursy</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Lista moich kursów</title>
 </head>
 <body>
-    <h1>Moje kursy</h1>
+    <br>
+    <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
+    <br>
+    <h1>Lista kursów</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
                 <div class="flash-message {{ category }}">
                     {{ message }}
                 </div>
+                <button onclick="window.location.href='/ulubione-kursy'">Ulubione kursy</button>
             {% endfor %}
         {% endif %}
     {% endwith %}
-
+    {% if 'id_user' in session %}
+    <h1>Witaj, {{ user_data.imie }}!</h1>
+    {% endif %}
     <ul>
         {% for kurs in moje_kursy %}
-            <li>
-                {{ kurs['nazwa'] }}
-                <a href="{{ url_for('moje_kursy', id_zamowienia_kursy=moje_kursy['id_zamowienia_kursy'], id_uzytkownika=moje_kursy['id_uzytkownika']) }}">
-                    <i class="fas fa-heart"></i>
-                    Dodaj do ulubionych
-                </a>
-            </li>
+        <li>
+            <h3>{{ kurs[0] }}</h3>
+            <p> URL: {{ kurs[7] }}</p>
+            <p>Autor: {{ kurs[6] }}</p>
+
+        </li>
         {% endfor %}
     </ul>
-    
-    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+    <button onclick="window.location.href='/'">Strona główna</button>
+    <br>
+    <br>
+    <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
 </body>
 </html>
+
+
+
+<!-- {% if 'id_user' in session %}
+<a href="{{ url_for('dodaj_do_ulubionych', id_zamowienia_kursy=moje_kursy[0], id_uzytkownika=moje_kursy[2]) }}">
+    <i class="fas fa-heart"></i>
+    <button>Dodaj do ulubionych</button>
+</a>
+{% endif %} -->

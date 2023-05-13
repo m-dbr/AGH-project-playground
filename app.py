@@ -179,26 +179,12 @@ def edytuj_dane():
 @app.route('/kursy')
 def courses():
     # Pobranie listy kursów z bazy danych
-    view = 'Vszczegoly_kursy'
-    tmp = fun.execute_query('SELECT * FROM Vszczegoly_kursy')
+    cursor = fun.connect_to_database().cursor()
+    cursor.execute('SELECT * FROM Vkursy_poziomy_widok')
+    kursy = cursor.fetchall()
+    cursor.close()
+    fun.connect_to_database().close()
 
-    result = {}
-    for i in range(len(tmp)):
-        result [i]=tmp[i]
-    
-    if result:
-        kursy = {
-            'id_kursu': result[0]['id_kursu'],
-            'nazwa': result[0]['nazwa'],
-            'autor': result[0]['autor'],
-            'cena': result[0]['cena'],
-            'data_dodania': result[0]['data_dodania'],
-            'czas_trwania': result[0]['czas_trwania'],
-            'adres_url': result[0]['adres_url'],
-            'nazwa_poziomu': result[0]['nazwa_poziomu']
-        }
-
-    
     if 'id_user' in session:
         user_data = fun.user_data(email=None, id_user=session['id_user']) 
         return render_template('kursy.html', kursy=kursy, user_data=user_data)
@@ -209,16 +195,14 @@ def courses():
 def buy_course(id_kursu):
     if 'id_user' in session:
         # Pobranie danych kursu
-        tmp0 = fun.execute_query('SELECT COUNT(*) FROM zamowienia_kursy WHERE id_kursu=?', (id_kursu))
-        result0 = {}
-        for i in range(len(tmp0)):
-            result0 [i]=tmp0[i]
+        result0 = fun.execute_query('SELECT * FROM zamowienia_kursy WHERE id_kursu=? AND id_uzytkownika=?', (id_kursu, session['id_user']))
         
-        if result0[0][''] > 0:
-            msg = 'Sprawdź swoje kursy! Już masz ten kurs :)'
-            return render_template('moje-konto.html', msg=msg, user_data=user_data)
+        
+        if result0:
+            flash('Sprawdź swoje kursy! Już masz ten kurs')
+            return redirect(url_for('courses'))
 
-        print(result0)
+        
         tmp = fun.execute_query('SELECT * FROM kursy WHERE id_kursu=?', (id_kursu,))
 
         result = {}
@@ -240,7 +224,9 @@ def buy_course(id_kursu):
         # Dodanie odrazu oplacenia jako dzien dzisiejszy - brak implementacji platnosci jeszcze
         fun.execute_sql_query('INSERT INTO zamowienia_kursy (id_kursu, id_uzytkownika, data_zlozenia, data_oplacenia, typ_platnosci) VALUES (?, ?, ?, ?, ?)', (kursy['id_kursu'], session['id_user'], current_date, current_date, 'Blik'))
         
-        return redirect(url_for('moje_konto'))
+        flash('Kurs zakupiono!')
+
+        return redirect(url_for('courses'))
     else:
         return redirect(url_for('login'))
 
@@ -249,31 +235,35 @@ def buy_course(id_kursu):
 @app.route('/moje-kursy')
 def my_courses():
         # Pobranie zakupionych kursów z bazy danych
-    tmp = fun.execute_query('SELECT * FROM Vszczegoly_zamowien_kursy')
+    cursor = fun.connect_to_database().cursor()
+    cursor.execute(f"SELECT * FROM Vszczegoly_zamowien_kursy where id_uzytkownika={session['id_user']}")
+    moje_kursy = cursor.fetchall()
+    cursor.close()
+    fun.connect_to_database().close()
 
-    result = {}
-    for i in range(len(tmp)):
-        result [i]=tmp[i]
-    
-    if result:
-        moje_kursy = {
-            'id_zamowienia_kurs': result[0]['id_zamowienia_kursy'],
-            'data_zlozenia': result[0]['data_zlozenia'],
-            'data_oplacenia': result[0]['data_oplacenia'],
-            'nazwa': result[0]['nazwa'],
-            'autor': result[0]['autor'],
-            'adres_url': result[0]['adres_url']
-        }
-    return render_template('moje-kursy.html', moje_kursy=moje_kursy)
+    if 'id_user' in session:
+        user_data = fun.user_data(email=None, id_user=session['id_user']) 
+        return render_template('moje-kursy.html', moje_kursy=moje_kursy, user_data=user_data)
+    return render_template('kursy.html', moje_kursy=moje_kursy)
 
 
-@app.route('/moje-kursy/<int:id_zamowienia>')
+
+@app.route('/moje-kursy/<int:id_zamowienia_kursy>+<int:id_uzytkownika>')
 def dodaj_do_ulubionych(id_zamowienia_kursy, id_uzytkownika):
     # Wprowadzenie rekordu do tabeli ulubione_kursy
+    result0 = fun.execute_query('SELECT COUNT(*) FROM ulubione_kursy WHERE id_zamowienia_kursy=? AND id_uzytkownika=?', (id_zamowienia_kursy, id_uzytkownika))
+    print('!!!')
+    print(id_zamowienia_kursy)
+    print(id_uzytkownika)
+        
+    if result0:
+        flash('Kurs już w ulubionych')
+        return redirect(url_for('my_courses'))
+
     fun.execute_sql_query('INSERT INTO ulubione_kursy (id_zamowienia_kursy, id_uzytkownika) VALUES (?, ?)', (id_zamowienia_kursy, id_uzytkownika,))
 
     flash('Dodano do ulubionych')
-    return redirect('/moje-kursy')
+    return redirect(url_for('my_courses'))
 
 if __name__ == '__main__':
     app.run()
