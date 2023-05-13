@@ -4,11 +4,19 @@
     <title>Strona główna</title>
 </head>
 <body>
-    <h1>Witaj na stronie głównej!</h1>
+    {% if 'id_user' in session %}
+    <h1>Zalogowany jako: {{ user_data.e_mail }}</h1>
+    <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
+    <a href="/moje-konto"><button>Moje konto</button></a>
+    <a href="/kursy"><button>Kursy</button></a>
+    <a href="/korepetycje"><button>Korepetycje</button></a>
+    {% else %}
+    <h1>Witaj na stronie naszych kursów!</h1>
     <a href="/login"><button>Logowanie</button></a>
     <a href="/rejestracja"><button>Rejestracja</button></a>
     <a href="/kursy"><button>Kursy</button></a>
     <a href="/korepetycje"><button>Korepetycje</button></a>
+  {% endif %}
 </body>
 </html>
 

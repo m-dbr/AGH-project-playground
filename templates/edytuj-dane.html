@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+    {% if msg %}
+    <h2 color="red">{{ msg }}</h2>
+    {% endif %}
+  <form action="/edytuj-dane" method="post">
+    <label for="imie">Imię:</label>
+    <input type="text" id="imie" name="imie" value="{{ imie }}"><br><br>
+    
+    <label for="nazwisko">Nazwisko:</label>
+    <input type="text" id="nazwisko" name="nazwisko" value="{{ nazwisko }}"><br><br>
+
+    <label for="password">Hasło:</label>
+    <input type="password" id="password" name="password" value="{{ password }}"><br><br>
+
+    <label>Płeć:</label>
+    <select name="plec">
+        <option value="Wybierz">Wybierz</option>
+        <option value="Mezczyzna">Mezczyzna</option>
+        <option value="Kobieta">Kobieta</option>
+        <option value="Inna">Inna</option>
+    </select><br><br>
+
+    <label>Telefon:</label>
+
+    <input type="text" name="telefon" placeholder="048000000000"><br><br>
+
+    <label>Data urodzenia:</label>
+    <input type="text" name="data_urodzenia" placeholder="rok-miesiac-dzien"><br><br>
+    
+    <label>Kraj:</label>
+    <input type="text" name="kraj"><br><br>
+
+    <label>Miasto:</label>
+    <input type="text" name="miasto"><br><br>
+    
+    <label>Ulica:</label>
+    <input type="text" name="ulica"><br><br>
+
+    <label>Numer domu:</label>
+    <input type="text" name="numer_domu"><br><br>
+
+    <label>Kod pocztowy:</label>
+    <input type="text" name="kod_pocztowy" placeholder="00-000"><br><br>
+    
+
+    <button type="submit">Wyślij</button>
+    
+    <a href="/moje-dane" class="cancel-button"><button>Anuluj</button></a>
+
+  </form>
+</body>
+</html>
+

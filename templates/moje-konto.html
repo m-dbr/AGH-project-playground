@@ -4,6 +4,7 @@
     <title>Dashboard</title>
 </head>
 <body>
+    {% if 'id_user' in session %}
     <h1>Witaj, {{ user_data.imie }}!</h1>
     <h1>Jesteś zalogowany jako, {{ user_data.e_mail }}!</h1>
     <button onclick="window.location.href='/moje-dane'">Moje dane</button>
@@ -12,10 +13,13 @@
     <button onclick="window.location.href='/moje-ulubione-kursy'">Moje ulubione kursy</button>
     <button onclick="window.location.href='/kursy'">Szukaj kursów</button>
     <button onclick="window.location.href='/korepetycje'">Szukaj korepetycji</button>
+    <button onclick="window.location.href='/'">Strona główna</button>
     <br>
     <br>
-    <form action="/wyloguj" method="POST">
-        <input type="submit" value="Wyloguj">
-    </form>
+    <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
+    {% else %}
+    <h1> Nie jesteś zalogowany </h1>
+    {% endif %}
+
 </body>
 </html>

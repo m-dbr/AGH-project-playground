@@ -15,7 +15,7 @@ def connect_to_database():
     cnxn = pyodbc.connect(connection_string)
     return cnxn
 
-def execute_sql_query(query):
+def execute_sql_query(query, params=None):
     """
     Wykonuje zapytanie SQL na bazie danych i zwraca wynik.
     """
@@ -23,18 +23,21 @@ def execute_sql_query(query):
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
 
-    cursor.execute(query)
+    cursor.execute(query, params)
     conn.commit()
     cursor.close()
     conn.close()
 
 
 # Funkcja pomocnicza do wykonania zapytania do bazy danych i zwracająca wynik w postaci słownika
-def execute_query(query):
+def execute_query(query, params=None):
     connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
-    cursor.execute(query)
+    if params is None:
+        cursor.execute(query)
+    else:
+        cursor.execute(query, params)
     rows = cursor.fetchall()
 
     # Pobranie nazw atrybutów
@@ -61,5 +64,33 @@ def hash_password(password):
     sha512.update(password.encode('utf-8'))
     return sha512.digest()
 
+def user_data(email=None, id_user=None):
+    if email is not None:
+        tmp = execute_query('SELECT * FROM uzytkownicy WHERE e_mail=?', (email,))
+    elif id_user is not None:
+        tmp = execute_query('SELECT * FROM uzytkownicy WHERE id_uzytkownika=?', (id_user,))
+
+    result = {}
+    for i in range(len(tmp)):
+        result [i]=tmp[i]
+    
+    if result:
+        user_data = {
+            'id_user': result[0]['id_uzytkownika'],
+            'imie': result[0]['imie'],
+            'nazwisko': result[0]['nazwisko'],
+            'e_mail': result[0]['e_mail'],
+            'haslo': result[0]['haslo'],
+            'plec': result[0]['plec'],
+            'telefon': result[0]['telefon'],
+            'data_urodzenia': result[0]['data_urodzenia'],
+            'kraj': result[0]['kraj'],
+            'miasto': result[0]['miasto'],
+            'ulica': result[0]['ulica'],
+            'numer_domu': result[0]['numer_domu'],
+            'kod_pocztowy': result[0]['kod_pocztowy']
+        }
+        return user_data
+    return False
 
 
