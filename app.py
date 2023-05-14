@@ -323,7 +323,7 @@ def add_to_favorites():
 
 
 @app.route('/odtworz/<int:id_zamowienia_kursy>')
-def odtworz_kurs(id_zamowienia_kursy):
+def play(id_zamowienia_kursy):
     """
     Odtworzenie kursu z adresu URL
     """
@@ -332,7 +332,7 @@ def odtworz_kurs(id_zamowienia_kursy):
     cursor.execute('SELECT adres_url FROM Vszczegoly_zamowien_kursy WHERE id_zamowienia_kursy = ?', (id_zamowienia_kursy,))
     adres_url = cursor.fetchone()[0]
     print(adres_url)
-    return render_template('odtworz_kurs.html', adres_url=adres_url)
+    return render_template('odtworz-kurs.html', adres_url=adres_url)
 
 
 @app.route('/ulubione-kursy')

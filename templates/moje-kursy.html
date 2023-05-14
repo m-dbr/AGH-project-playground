@@ -20,7 +20,7 @@
         <li>
             <h3>{{ kurs[5] }}</h3>
             <p>Autor: {{ kurs[6] }}</p>
-            <a href="{{ url_for('odtworz_kurs', id_zamowienia_kursy=kurs[0]) }}">
+            <a href="{{ url_for('play', id_zamowienia_kursy=kurs[0]) }}">
                 <button type="button">Odtwórz kurs</button>
             </a>
             {% if kurs[0] in ulubione_kursy_ids %}

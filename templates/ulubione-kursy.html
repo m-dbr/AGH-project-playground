@@ -20,7 +20,7 @@
         <h3>{{ kurs[2] }}</h3>
         <h3>Autor: {{ kurs[3] }}</h3>
         <h3>Czas trwania: {{ kurs[5] }}</h3>
-        <a href="{{ url_for('odtworz_kurs', id_zamowienia_kursy=kurs[0]) }}">
+        <a href="{{ url_for('play', id_zamowienia_kursy=kurs[0]) }}">
             <button type="button">Odtwórz kurs</button>
         </a>
 
