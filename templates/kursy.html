@@ -31,9 +31,9 @@
             <p>Data dodania: {{ kurs[4] }}</p>
             <p>Czas trwania: {{ kurs[5] }}</p>
             {% if 'id_user' in session %}
-                <a href="{{ url_for('buy_course', id_kursu=kurs[0]) }}">Kup kurs</a>
+                <a href="{{ url_for('buy_course', id_kursu=kurs[0]) }}"><button>Kup kurs</button></a>
             {% else %}
-                <a href="{{ url_for('login') }}">Zaloguj się, aby kupić kurs</a>
+                <a href="{{ url_for('login') }}"><button>Zaloguj się, aby kupić kurs</button></a>
             {% endif %}
         </li>
         {% endfor %}

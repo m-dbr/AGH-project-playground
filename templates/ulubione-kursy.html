@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ulubione kursy</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1>Ulubione kursy</h1>
+
+    {% for kurs in ulubione_kursy %}
+      <div class="kurs">
+        <h3>{{ kurs[2] }}</h3>
+        <h3>Autor: {{ kurs[3] }}</h3>
+        <h3>Czas trwania: {{ kurs[5] }}</h3>
+        <a href="{{ url_for('odtworz_kurs', id_zamowienia_kursy=kurs[0]) }}">
+            <button type="button">Odtwórz kurs</button>
+        </a>
+
+        <form action="/usun-ulubiony-kurs" method="post">
+            <input type="hidden" name="redirect_page" value="ulubione-kursy">
+          <input type="hidden" name="id_zamowienia_kursy" value="{{ kurs[0] }}">
+          <button type="submit">Usuń z ulubionych</button>
+        </form>
+      </div>
+    {% endfor %}
+    <button onclick="window.location.href='/moje-konto'">Wróć</button>
+
+
+</body>
+</html>

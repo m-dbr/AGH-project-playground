@@ -4,15 +4,16 @@
     {% if msg %}
     <h2 color="red">{{ msg }}</h2>
     {% endif %}
+    <h2>Edytuj swoje dane:</h2>
   <form action="/edytuj-dane" method="post">
     <label for="imie">Imię:</label>
-    <input type="text" id="imie" name="imie" value="{{ imie }}"><br><br>
+    <input type="text" id="imie" name="imie" value="{{ user_data.imie or '' }}"><br><br>
     
     <label for="nazwisko">Nazwisko:</label>
-    <input type="text" id="nazwisko" name="nazwisko" value="{{ nazwisko }}"><br><br>
+    <input type="text" id="nazwisko" name="nazwisko" value="{{ user_data.nazwisko or '' }}"><br><br>
 
     <label for="password">Hasło:</label>
-    <input type="password" id="password" name="password" value="{{ password }}"><br><br>
+    <input type="password" id="password" name="password" value="{{ password or '' }}"><br><br>
 
     <label>Płeć:</label>
     <select name="plec">
@@ -24,25 +25,25 @@
 
     <label>Telefon:</label>
 
-    <input type="text" name="telefon" placeholder="048000000000"><br><br>
+    <input type="text" name="telefon" placeholder="048000000000" value="{{ user_data.telefon or '' }}"><br><br>
 
     <label>Data urodzenia:</label>
-    <input type="text" name="data_urodzenia" placeholder="rok-miesiac-dzien"><br><br>
+    <input type="text" name="data_urodzenia" placeholder="rok-miesiac-dzien" value="{{ user_data.data_urodzenia or '' }}"><br><br>
     
     <label>Kraj:</label>
-    <input type="text" name="kraj"><br><br>
+    <input type="text" name="kraj" value="{{ user_data.kraj or '' }}"><br><br>
 
     <label>Miasto:</label>
-    <input type="text" name="miasto"><br><br>
+    <input type="text" name="miasto" value="{{ user_data.miasto or '' }}"><br><br>
     
     <label>Ulica:</label>
-    <input type="text" name="ulica"><br><br>
+    <input type="text" name="ulica" value="{{ user_data.ulica or '' }}"><br><br>
 
     <label>Numer domu:</label>
-    <input type="text" name="numer_domu"><br><br>
+    <input type="text" name="numer_domu" value="{{ user_data.numer_domu or '' }}"><br><br>
 
     <label>Kod pocztowy:</label>
-    <input type="text" name="kod_pocztowy" placeholder="00-000"><br><br>
+    <input type="text" name="kod_pocztowy" placeholder="00-000" value="{{ user_data.kod_pocztowy or '' }}"><br><br>
     
 
     <button type="submit">Wyślij</button>

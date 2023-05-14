@@ -9,11 +9,15 @@ username = config.DATABASE_USER
 password = config.DATABASE_PASSWORD
 driver = config.DATABASE_DRIVER
 
-# Funkcja łącząca do bazy danych
+
 def connect_to_database():
+    """
+    Połącznie z bazą danych
+    """
     connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
     cnxn = pyodbc.connect(connection_string)
     return cnxn
+
 
 def execute_sql_query(query, params=None):
     """
@@ -29,8 +33,10 @@ def execute_sql_query(query, params=None):
     conn.close()
 
 
-# Funkcja pomocnicza do wykonania zapytania do bazy danych i zwracająca wynik w postaci słownika
 def execute_query(query, params=None):
+    """
+    Funkcja wykonująca zapytanie SQL i zwracająca słownik
+    """
     connection_string = f'DRIVER={driver};SERVER={server};DATABASE={database};UID={username};PWD={password}'
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
@@ -58,8 +64,10 @@ def execute_query(query, params=None):
     # Zwrócenie wyniku jako słownik
     return result
 
-# Funkcja szyfrująca hasło
 def hash_password(password):
+    """
+    Funkcja szyfrująca hasło
+    """
     sha512 = hashlib.sha512()
     sha512.update(password.encode('utf-8'))
     return sha512.digest()

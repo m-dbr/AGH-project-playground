@@ -6,33 +6,30 @@
 <body>
     {% if 'id_user' in session %}
     {% if msg %}
-    <h2> {{ msg }}</h2>
+    <h2>{{ msg }}</h2>
     {% endif %}
     <h1>Witaj, {{ user_data.imie }}!</h1>
     <h1>Jesteś zalogowany jako, {{ user_data.e_mail }}!</h1>
     <h2>Oto Twoje dane:</h2>
-    <br>
-    <br>
-    <p>Imię: {{ user_data.imie }}</p>
-    <p>Nazwisko: {{ user_data.nazwisko }}</p>
-    <p>Płeć: {{ user_data.plec }}</p>
-    <p>Telefon: {{ user_data.telefon }}</p>
-    <p>Data urodzenia: {{ user_data.data_urodzenia }}</p>
-    <p>Kraj: {{ user_data.kraj }}</p>
-    <p>Miasto: {{ user_data.miasto }}</p>
-    <p>Ulica: {{ user_data.ulica }}</p>
-    <p>Numer domu: {{ user_data.numer_domu }}</p>
-    <p>Kod pocztowy: {{ user_data.kod_pocztowy }}</p>
+    <p>Imię: {{ user_data.imie or '' }}</p>
+    <p>Nazwisko: {{ user_data.nazwisko or '' }}</p>
+    <p>Płeć: {{ user_data.plec or '' }}</p>
+    <p>Telefon: {{ user_data.telefon or '' }}</p>
+    <p>Data urodzenia: {{ user_data.data_urodzenia or '' }}</p>
+    <p>Kraj: {{ user_data.kraj or '' }}</p>
+    <p>Miasto: {{ user_data.miasto or '' }}</p>
+    <p>Ulica: {{ user_data.ulica or '' }}</p>
+    <p>Numer domu: {{ user_data.numer_domu or '' }}</p>
+    <p>Kod pocztowy: {{ user_data.kod_pocztowy or '' }}</p>
 
-    <br>
     <br>
 
     <!-- Przycisk Edytuj -->
     <button onclick="window.location.href='/edytuj-dane'">Edytuj</button>
+    <button onclick="window.location.href='/moje-konto'">Wróć do mojego konta</button>
 
     {% else %}
-    <h1> Nie jesteś zalogowany </h1>
+    <h1>Nie jesteś zalogowany</h1>
     {% endif %}
-
 </body>
 </html>
