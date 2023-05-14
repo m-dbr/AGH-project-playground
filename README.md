@@ -2,7 +2,7 @@
 
 Projekt dyplomowy Systemy Baz Danych realizowany na Akademii Górniczo-Hutniczej w Krakowie
 
-## Wymagania systemowe
+## Po co?
 
 Nniniejsze repozytorium zawiera moją pracę dyplomową z prostą implementacją aplikacji internetowej
 
