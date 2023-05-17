@@ -5,7 +5,9 @@
 </head>
 <body>
     <br>
+    {% if 'id_user' in session %}
     <a href="{{ url_for('logout') }}"><button>Wyloguj</button></a>
+    {% endif %}
     <br>
     <h1>Lista kursów</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}

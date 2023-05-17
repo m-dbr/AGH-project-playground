@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime, time
+import time
 
 import fun
 
@@ -44,8 +45,15 @@ def login():
                 session.permanent = True
                 app.permanent_session_lifetime = timedelta(hours=2)
 
+
+                user_data = fun.user_data(email=None, id_user=session['id_user'])
+                query = f"UPDATE uzytkownicy SET ostatnie_logowanie=? WHERE id_uzytkownika=?"
+                params = (datetime.now(), session['id_user'])
+                fun.execute_sql_query(query, params)
+
                 # jeżeli dane są poprawne następuje wpisanie id_uzytkownika do sesji
                 # przekierowanie do strony moje-konto
+
                 return redirect(url_for('dashboard', user_data=user_data))
             else:
                 error_msg = "Nieprawidłowe hasło!"
@@ -143,6 +151,19 @@ def user_data():
     user_data = fun.user_data(email=None, id_user=session['id_user'])
     if user_data:
         return render_template('moje-dane.html', user_data=user_data)
+    
+@app.route('/usun-konto', methods=['POST'])
+def delet_account():
+    user_id = session.get('id_user')  # Pobierz ID użytkownika z sesji
+
+    if user_id:
+        user_data = fun.user_data(email=None, id_user=session['id_user'])
+        new_email=f"[deleted]_{time.time()}_{user_data['e_mail']}"
+        query = f"UPDATE uzytkownicy SET data_usuniecia=?, e_mail=? WHERE id_uzytkownika=?"
+        params = (datetime.now(), new_email, session['id_user'])
+
+        fun.execute_sql_query(query, params)
+    return redirect('/wyloguj')
 
 @app.route('/edytuj-dane', methods=['GET', 'POST'])
 def edytuj_dane():

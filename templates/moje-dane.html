@@ -28,8 +28,30 @@
     <button onclick="window.location.href='/edytuj-dane'">Edytuj</button>
     <button onclick="window.location.href='/moje-konto'">Wróć do mojego konta</button>
 
+    <br>
+    <button onclick="usunKonto()">Usuń konto</button>
+
+
+
     {% else %}
     <h1>Nie jesteś zalogowany</h1>
     {% endif %}
+
+    <script>
+        function usunKonto() {
+            if (confirm("Czy na pewno chcesz usunąć swoje konto?")) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/usun-konto", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Przekierowanie na stronę wylogowania lub inny dowolny URL
+                        window.location.href = "/wyloguj";
+                    }
+                };
+                xhr.send();
+            }
+        }
+    </script>
 </body>
 </html>

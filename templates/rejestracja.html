@@ -10,16 +10,16 @@
     {% endif %}
     <form method="POST" action="/rejestracja">
         <label>Email:</label>
-        <input type="email" name="email" required><br><br>
+        <input type="email" name="email" required><span style="color: red;">*</span><br><br>
         
         <label>Hasło:</label>
-        <input type="password" name="password" required><br><br>
+        <input type="password" name="password" required><span style="color: red;">*</span><br><br>
         
         <label>Imię:</label>
-        <input type="text" name="imie" required><br><br>
+        <input type="text" name="imie" required><span style="color: red;">*</span><br><br>
         
         <label>Nazwisko:</label>
-        <input type="text" name="nazwisko" required><br><br>
+        <input type="text" name="nazwisko" required><span style="color: red;">*</span><br><br>
         
         <label>Płeć:</label>
         <select name="plec">

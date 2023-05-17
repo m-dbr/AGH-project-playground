@@ -74,9 +74,9 @@ def hash_password(password):
 
 def user_data(email=None, id_user=None):
     if email is not None:
-        tmp = execute_query('SELECT * FROM uzytkownicy WHERE e_mail=?', (email,))
+        tmp = execute_query('SELECT * FROM uzytkownicy WHERE e_mail=? AND data_usuniecia IS NULL', (email,))
     elif id_user is not None:
-        tmp = execute_query('SELECT * FROM uzytkownicy WHERE id_uzytkownika=?', (id_user,))
+        tmp = execute_query('SELECT * FROM uzytkownicy WHERE id_uzytkownika=? AND data_usuniecia IS NULL', (id_user,))
 
     result = {}
     for i in range(len(tmp)):
@@ -96,7 +96,8 @@ def user_data(email=None, id_user=None):
             'miasto': result[0]['miasto'],
             'ulica': result[0]['ulica'],
             'numer_domu': result[0]['numer_domu'],
-            'kod_pocztowy': result[0]['kod_pocztowy']
+            'kod_pocztowy': result[0]['kod_pocztowy'],
+            'data_usuniecia': result[0]['data_usuniecia']
         }
         return user_data
     return False
